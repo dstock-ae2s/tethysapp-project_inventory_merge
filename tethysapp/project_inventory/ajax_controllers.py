@@ -336,7 +336,7 @@ def import_revenue_to_db(request):
         revenue_list = session.query(Revenue).all()
         row_id = len(revenue_list) +1
 
-        with open('/Users/tmcstraw/Downloads/RevenueFinal.csv', newline='') as f:
+        with open('/home/dstock/Downloads/RevenueFinal.csv', newline='') as f:
             reader = csv.reader(f)
             data = list(reader)
             newdata = (data[1:])
@@ -369,7 +369,7 @@ def import_projects_to_db(request):
         project_list = session.query(Project).all()
         row_id = len(project_list) +1
 
-        with open('/Users/tmcstraw/Downloads/CostsFinal.csv', newline='') as f:
+        with open('/home/dstock/Downloads/CostsFinal.csv', newline='') as f:
             reader = csv.reader(f)
             data = list(reader)
 

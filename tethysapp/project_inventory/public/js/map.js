@@ -461,17 +461,19 @@ function updateCategorizedModal(return_data){
         } else{
             recur_is_checked = " ";
         }
+
+        priority_image = getCatImage(project_priority_list, i)
         console.log(project_const_cost_list)
 
         html += '<tr id="row-'+(i+1)+'">'+
-                    '<td><input class="cedit-fields" type="text" id="' + (i+1) +'-projectc-facilityid" value="'+ project_facility_id_list[i] + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-facilityid" type="text" id="' + (i+1) +'-projectc-facilityid" value="'+ project_facility_id_list[i] + '" disabled></td>' +
                     '<td><input class="cedit-fields projectc-name" type="text" id="' + (i+1) +'-projectc-name" value="'+ project_name_list[i] + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" id="' + (i+1) +'-projectc-priority" value="'+ project_priority_list[i] + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" id="' + (i+1) +'-projectc-description" value="'+ project_description_list[i] + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-estyear" value="'+ project_est_year_list[i] + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-estcost" value="'+ numToCurrency(project_est_cost_list[i]) + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-constyear" value="'+ project_const_year_list[i] + '" disabled></td>' +
-                    '<td><input class="cedit-fields" type="text" id="' + (i+1) +'-projectc-constcost" value="'+ numToCurrency(project_const_cost_list[i]) + '" disabled></td>' +
+                    '<td>'+priority_image+'<input class="cedit-fields" type="hidden" id="' + (i+1) +'-projectc-priority" value="'+ project_priority_list[i] + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-description" type="text" id="' + (i+1) +'-projectc-description" value="'+ project_description_list[i] + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-estyear" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-estyear" value="'+ project_est_year_list[i] + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-estcost" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-estcost" value="'+ numToCurrency(project_est_cost_list[i]) + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-constyear" type="text" onchange="inflationCheckC('+(i+1)+');" id="' + (i+1) +'-projectc-constyear" value="'+ project_const_year_list[i] + '" disabled></td>' +
+                    '<td><input class="cedit-fields projectc-constcost" type="text" id="' + (i+1) +'-projectc-constcost" value="'+ numToCurrency(project_const_cost_list[i]) + '" disabled></td>' +
                     '<td><input class="cedit-fields" type="checkbox" id="' + (i+1) +'-debtc-checkbox"'+ debt_is_checked + 'disabled></td>' +
                     '<td><input class="cedit-fields" type="checkbox" id="' + (i+1) +'-recurc-checkbox"'+ recur_is_checked + 'disabled></td>' +
                     '<td class="table-button"><div"><a name="csubmit-stop-edit-region" style="display:none;" id="cstop-edit-button-'+(i+1)+'" onclick="stopCatEditRow('+(i+1)+');" class="btn btn-success csubmit-stop-edit-region" role="button">'+
@@ -522,8 +524,11 @@ function editCatRow (row_num){
     document.getElementById(row_num+'-projectc-description').disabled = false;
     document.getElementById(row_num+'-projectc-description').style.border = '1px solid';
 
+    document.getElementById(row_num+'-projectc-priority').type = 'text';
     document.getElementById(row_num+'-projectc-priority').disabled = false;
     document.getElementById(row_num+'-projectc-priority').style.border = '1px solid';
+
+    document.getElementById(row_num+'-projectc-priorityimage').classList.add('chiddenImage');
 
     document.getElementById(row_num+'-projectc-estyear').disabled = false;
     document.getElementById(row_num+'-projectc-estyear').style.border = '1px solid';
@@ -603,8 +608,13 @@ function stopCatEditRow (row_num){
     document.getElementById(row_num+'-projectc-description').disabled = true;
     document.getElementById(row_num+'-projectc-description').style.border = 'none';
 
+    document.getElementById(row_num+'-projectc-priority').type = 'hidden';
     document.getElementById(row_num+'-projectc-priority').disabled = true;
     document.getElementById(row_num+'-projectc-priority').style.border = 'none';
+
+    this_src = getImageSRC(document.getElementById(row_num+'-projectc-priority').value)
+    document.getElementById(row_num+'-projectc-priorityimage').src = this_src;
+    document.getElementById(row_num+'-projectc-priorityimage').classList.remove('chiddenImage');
 
     document.getElementById(row_num+'-projectc-estyear').disabled = true;
     document.getElementById(row_num+'-projectc-estyear').style.border = 'none';
@@ -634,6 +644,7 @@ function deleteProjRow (elem){
         document.getElementById(i+'-project-category').id = (i-1)+'-project-category';
         document.getElementById(i+'-project-description').id = (i-1)+'-project-description';
         document.getElementById(i+'-project-priority').id =(i-1)+'-project-priority';
+        document.getElementById(i+'-project-priorityimage').id =(i-1)+'-project-priorityimage';
         document.getElementById(i+'-project-estyear').id = (i-1)+'-project-estyear';
         document.getElementById(i+'-project-constcost').id =(i-1)+'-project-constcost';
         document.getElementById(i+'-debt-checkbox').id =(i-1)+'-debt-checkbox';
@@ -659,6 +670,7 @@ function deleteCatRow (elem){
         document.getElementById(i+'-projectc-facilityid').id = (i-1)+'-projectc-facilityid';
         document.getElementById(i+'-projectc-description').id = (i-1)+'-projectc-description';
         document.getElementById(i+'-projectc-priority').id =(i-1)+'-projectc-priority';
+        document.getElementById(i+'-projectc-priorityimage').id =(i-1)+'-projectc-priorityimage';
         document.getElementById(i+'-projectc-estyear').id = (i-1)+'-projectc-estyear';
         document.getElementById(i+'-projectc-constcost').id =(i-1)+'-projectc-constcost';
         document.getElementById(i+'-debtc-checkbox').id =(i-1)+'-debtc-checkbox';
@@ -679,15 +691,17 @@ function addCatProjectRow (){
         console.log(numrows);
         i = numrows;
 
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage chiddenImage" src="/static/project_inventory/images/PriorityOne.png" width="30" height="30" alt="Priority icon">'
+
         html += '<tr id="row-'+(i+1)+'">'+
-                    '<td><input style="border: 1px solid" class="cedit-fields" type="text" id="' + (i+1) +'-projectc-facilityid" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-facilityid" type="text" id="' + (i+1) +'-projectc-facilityid" value="" ></td>' +
                     '<td><input style="border: 1px solid" class="cedit-fields projectc-name" type="text" id="' + (i+1) +'-projectc-name" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" type="text" id="' + (i+1) +'-projectc-priority" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" type="text" id="' + (i+1) +'-projectc-description" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-estyear" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-estcost" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-constyear" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="cedit-fields" type="text" id="' + (i+1) +'-projectc-constcost" value="" ></td>' +
+                    '<td>' + priority_image + '<input style="border: 1px solid" class="cedit-fields projectc-priority" type="text" id="' + (i+1) +'-projectc-priority" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-description" type="text" id="' + (i+1) +'-projectc-description" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-estyear" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-estyear" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-estcost" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-estcost" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-constyear" onchange="inflationCheckC('+(i+1)+');" type="text" id="' + (i+1) +'-projectc-constyear" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="cedit-fields projectc-constcost" type="text" id="' + (i+1) +'-projectc-constcost" value="" ></td>' +
                     '<td><input class="cedit-fields" type="checkbox" id="' + (i+1) +'-debtc-checkbox" value="true"></td>' +
                     '<td><input class="cedit-fields" type="checkbox" id="' + (i+1) +'-recurc-checkbox" value="true"></td>' +
                     '<td class="table-button"><div"><a name="csubmit-stop-edit-region" style="display:none;" id="cstop-edit-button-'+(i+1)+'" onclick="stopCatEditRow('+(i+1)+');" class="btn btn-success csubmit-stop-edit-region" role="button">'+
@@ -830,18 +844,18 @@ $(function() {
                         recur_is_checked = " ";
                     }
 
-                    console.log("This is the current code")
+                    priority_image = getImage(project_priority_list, i);
                     console.log(project_const_cost_list)
 
                     html += '<tr id="row-'+(i+1)+'">'+
                                 '<td><input class="edit-fields project-name" type="text" id="' + (i+1) +'-project-name" value="'+ project_name_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" id="' + (i+1) +'-project-category" value="'+ project_category_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" id="' + (i+1) +'-project-priority" value="'+ project_priority_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" id="' + (i+1) +'-project-description" value="'+ project_description_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-estyear" value="'+ project_est_year_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-estcost" value="'+ numToCurrency(project_est_cost_list[i]) + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-constyear" value="'+ project_const_year_list[i] + '" disabled></td>' +
-                                '<td><input class="edit-fields" type="text" id="' + (i+1) +'-project-constcost" value="'+ numToCurrency(project_const_cost_list[i]) + '" disabled></td>' +
+                                '<td><input class="edit-fields project-category" type="text" id="' + (i+1) +'-project-category" value="'+ project_category_list[i] + '" disabled></td>' +
+                                '<td>'+ priority_image +'<input class="edit-fields priorityText" type="hidden" id="' + (i+1) +'-project-priority" value="'+ project_priority_list[i] + '" disabled>' + '</td>' +
+                                '<td><input class="edit-fields project-description" type="text" id="' + (i+1) +'-project-description" value="'+ project_description_list[i] + '" disabled></td>' +
+                                '<td><input class="edit-fields project-estyear" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-estyear" value="'+ project_est_year_list[i] + '" disabled></td>' +
+                                '<td><input class="edit-fields project-estcost" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-estcost" value="'+ numToCurrency(project_est_cost_list[i]) + '" disabled></td>' +
+                                '<td><input class="edit-fields project-constyear" type="text" onchange="inflationCheck('+(i+1)+');" id="' + (i+1) +'-project-constyear" value="'+ project_const_year_list[i] + '" disabled></td>' +
+                                '<td><input class="edit-fields project-constcost" type="text" id="' + (i+1) +'-project-constcost" value="'+ numToCurrency(project_const_cost_list[i]) + '" disabled></td>' +
                                 '<td><input class="edit-fields" type="checkbox" id="' + (i+1) +'-debt-checkbox"'+ debt_is_checked + 'disabled></td>' +
                                 '<td><input class="edit-fields" type="checkbox" id="' + (i+1) +'-recur-checkbox"'+ recur_is_checked + 'disabled></td>' +
                                 '<td class="table-button"><div style:"white-space: nowrap;"><a name="submit-stop-edit-region" style="display:none;" aria-label="Stop Editing" id="stop-edit-button-'+(i+1)+'" onclick="stopEditRow('+(i+1)+');" class="btn btn-group btn-success submit-stop-edit-region" role="button">'+
@@ -867,6 +881,57 @@ function closeModal (){
     var select_interaction = TETHYS_MAP_VIEW.getSelectInteraction();
 
     select_interaction.getFeatures().clear();
+};
+
+function getImage(project_priority_list, i){
+    if(project_priority_list[i]=='1'){
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage" src="/static/project_inventory/images/PriorityOne.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='2'){
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage" src="/static/project_inventory/images/PriorityTwo.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='3'){
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage" src="/static/project_inventory/images/PriorityThree.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='4'){
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage" src="/static/project_inventory/images/PriorityFour.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='5'){
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage" src="/static/project_inventory/images/PriorityFive.png" width="30" height="30" alt="Priority icon">'
+    } else {
+        console.log(project_priority_list[i])
+    }
+    return priority_image;
+};
+
+function getImageSRC(project_priority){
+    if(project_priority=='1'){
+        this_src = "/static/project_inventory/images/PriorityOne.png";
+    } else if(project_priority=='2'){
+        this_src="/static/project_inventory/images/PriorityTwo.png";
+    } else if(project_priority=='3'){
+        this_src="/static/project_inventory/images/PriorityThree.png";
+    } else if(project_priority=='4'){
+        this_src="/static/project_inventory/images/PriorityFour.png";
+    } else if(project_priority=='5'){
+        this_src="/static/project_inventory/images/PriorityFive.png";
+    } else {
+        console.log(project_priority)
+    }
+    return this_src;
+};
+
+function getCatImage(project_priority_list, i){
+    if(project_priority_list[i]=='1'){
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage" src="/static/project_inventory/images/PriorityOne.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='2'){
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage" src="/static/project_inventory/images/PriorityTwo.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='3'){
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage" src="/static/project_inventory/images/PriorityThree.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='4'){
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage" src="/static/project_inventory/images/PriorityFour.png" width="30" height="30" alt="Priority icon">'
+    } else if(project_priority_list[i]=='5'){
+        priority_image = '<img id="'+ (i+1) +'-projectc-priorityimage" class="cfit-picture cpriorityImage" src="/static/project_inventory/images/PriorityFive.png" width="30" height="30" alt="Priority icon">'
+    } else {
+        console.log(project_priority_list[i])
+    }
+    return priority_image;
 };
 
 function editRow (row_num){
@@ -904,6 +969,9 @@ function editRow (row_num){
 
     document.getElementById(row_num+'-project-priority').disabled = false;
     document.getElementById(row_num+'-project-priority').style.border = '1px solid';
+    document.getElementById(row_num+'-project-priority').type = 'text';
+
+    document.getElementById(row_num+'-project-priorityimage').classList.add('hiddenImage');
 
     document.getElementById(row_num+'-project-estyear').disabled = false;
     document.getElementById(row_num+'-project-estyear').style.border = '1px solid';
@@ -958,6 +1026,11 @@ function stopEditRow (row_num){
 
     document.getElementById(row_num+'-project-priority').disabled = true;
     document.getElementById(row_num+'-project-priority').style.border = 'none';
+    document.getElementById(row_num+'-project-priority').type = 'hidden';
+
+    this_src = getImageSRC(document.getElementById(row_num+'-project-priority').value)
+    document.getElementById(row_num+'-project-priorityimage').src = this_src;
+    document.getElementById(row_num+'-project-priorityimage').classList.remove('hiddenImage');
 
     document.getElementById(row_num+'-project-estyear').disabled = true;
     document.getElementById(row_num+'-project-estyear').style.border = 'none';
@@ -983,15 +1056,17 @@ function addProjectRow (){
         console.log(numrows);
         i = numrows;
 
+        priority_image = '<img id="'+ (i+1) +'-project-priorityimage" class="fit-picture priorityImage hiddenImage" src="/static/project_inventory/images/PriorityOne.png" width="30" height="30" alt="Priority icon">'
+
         html += '<tr id="row-'+(i+1)+'">'+
                     '<td><input style="border: 1px solid" class="edit-fields project-name" type="text" id="' + (i+1) +'-project-name" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" type="text" id="' + (i+1) +'-project-category" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" type="text" id="' + (i+1) +'-project-priority" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" type="text" id="' + (i+1) +'-project-description" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-estyear" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-estcost" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-constyear" value="" ></td>' +
-                    '<td><input style="border: 1px solid" class="edit-fields" type="text" id="' + (i+1) +'-project-constcost" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-category" type="text" id="' + (i+1) +'-project-category" value="" ></td>' +
+                    '<td>' + priority_image + '<input style="border: 1px solid" class="edit-fields" type="text" id="' + (i+1) +'-project-priority" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-description" type="text" id="' + (i+1) +'-project-description" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-estyear" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-estyear" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-estcost" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-estcost" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-constyear" onchange="inflationCheck('+(i+1)+')"; type="text" id="' + (i+1) +'-project-constyear" value="" ></td>' +
+                    '<td><input style="border: 1px solid" class="edit-fields project-constcost" type="text" id="' + (i+1) +'-project-constcost" value="" ></td>' +
                     '<td><input class="edit-fields" type="checkbox" id="' + (i+1) +'-debt-checkbox" value="true"></td>' +
                     '<td><input class="edit-fields" type="checkbox" id="' + (i+1) +'-recur-checkbox" value="true"></td>' +
                     '<td class="table-button"><div"><a name="submit-stop-edit-region" style="display:none;" id="stop-edit-button-'+(i+1)+'" onclick="stopEditRow('+(i+1)+');" class="btn btn-success submit-stop-edit-region" role="button">'+

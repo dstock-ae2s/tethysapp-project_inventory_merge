@@ -8,6 +8,14 @@
     max-width: none;
 }
 
+.hiddenImage {
+    display: none;
+}
+
+.chiddenImage {
+    display: none;
+}
+
 #inner-app-content {
     padding: 0;
 }
@@ -25,13 +33,61 @@ table {
   font-family: arial, sans-serif;
   margin-right:20px;
   padding:20px;
+}
+
+input.break {
+    word-wrap: break-word;
+    word-break: break-all;
+    height: 80px;
+}
+
+.project-description{
+    width: 250px;
+}
+.project-category{
+    width: 100px;
+}
+.project-estyear{
+    width: 50px;
+}
+.project-constyear{
+    width: 50px;
+}
+.project-estcost{
+    width: 75px;
+}
+.project-constcost{
+    width: 75px;
+}
+
+.projectc-category{
+    width: 100px;
+}
+.projectc-estyear{
+    width: 50px;
+}
+.projectc-constyear{
+    width: 50px;
+}
+.projectc-estcost{
+    width: 75px;
+}
+.projectc-constcost{
+    width: 75px;
+}
+.projectc-facilityid{
+    width: 150px;
+}
+.projectc-description{
+    width: 250px;
+}
 
 
 table, td, th {
 
 }
 
-}
+
 td {
   border: 1px solid #000000;
   padding: 8px;
