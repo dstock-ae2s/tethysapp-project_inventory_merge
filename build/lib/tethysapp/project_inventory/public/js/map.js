@@ -830,7 +830,6 @@ $(function() {
                         recur_is_checked = " ";
                     }
 
-                    console.log("This is the current code")
                     console.log(project_const_cost_list)
 
                     html += '<tr id="row-'+(i+1)+'">'+

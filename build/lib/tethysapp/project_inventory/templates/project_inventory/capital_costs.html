@@ -1,0 +1,52 @@
+{% extends "project_inventory/base.html" %}
+{% load tethys_gizmos %}
+{% load tethys_gizmos staticfiles %}
+{% load static %}
+
+{% block app_content %}
+    <!--<label for="graph-selector">Select Chart Type</label>-->
+    <!--<select style="width:250px; margin-right:20px;" id="graph-selector">-->
+        <!--<option>Future Cost BarChart</option>-->
+        <!--<option>Future Cost PieChart</option>-->
+        <!--<option>Future Cost SunburstChart</option>-->
+        <!--<option>Future Revenue BarChart</option>-->
+        <!--<option>Future Revenue PieChart</option>-->
+        <!--<option>Future Revenue SunburstChart</option>-->
+    <!--</select>-->
+    <!--<label for="graph-start-date">Starting Year:</label>-->
+    <!--<input id="graph-start-date" value="2020" type="number" placeholder="2020">-->
+    <!--<label for="graph-end-date">Ending Year:</label>-->
+    <!--<input id="graph-end-date" type="number" value="2040" placeholder="2040">-->
+
+    <div id="future-cost-barchart">
+
+        {% gizmo bargraph_plot %}
+    </div>
+    <div id ="future-cost-piechart">
+        {% gizmo piechart_plot %}
+    </div>
+    <div id="future-cost-sunburstchart">
+        {% gizmo sunburst_plot %}
+    </div>
+
+
+{% endblock %}
+
+{% block after_app_content %}
+    <div class="modal fade" id="chart-loading-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h5 class="modal-title" style="text-align:center;" id="modal-category">Loading Charts/Generating Reports...</h5>
+            </div>
+            <div class="modal-body" style="text-align:center;" id="chart-loading-modal-body">
+              <img src="{% static 'project_inventory/images/loading.gif' %}" style="align:center;" width="150" height="150" alt="Loading Please Wait ...">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}
